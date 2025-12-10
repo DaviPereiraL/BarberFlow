@@ -1,0 +1,101 @@
+<div class="min-h-screen bg-background p-6 text-white font-sans flex flex-col items-center justify-center">
+  
+  <div class="max-w-lg w-full bg-card border border-zinc-700 p-8 rounded-xl shadow-xl">
+    <h2 class="text-2xl font-bold mb-6 text-center">Editar <span class="text-primary">Perfil</span></h2>
+
+    <div class="flex border-b border-zinc-700 mb-6" *ngIf="user.role === 'BARBER' || user.role === 'OWNER'">
+      <button (click)="activeTab = 'DATA'" 
+              [class.border-primary]="activeTab === 'DATA'" 
+              [class.text-primary]="activeTab === 'DATA'" 
+              class="flex-1 pb-3 border-b-2 transition font-bold text-zinc-500 hover:text-white">
+        Dados Pessoais
+      </button>
+      <button (click)="activeTab = 'SCHEDULE'" 
+              [class.border-primary]="activeTab === 'SCHEDULE'" 
+              [class.text-primary]="activeTab === 'SCHEDULE'" 
+              class="flex-1 pb-3 border-b-2 border-transparent transition text-zinc-500 hover:text-white">
+        Horários de Trabalho
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="text-center text-muted animate-pulse py-10">⏳ Carregando dados...</div>
+
+    <div *ngIf="!isLoading">
+      
+      <div *ngIf="activeTab === 'DATA'" class="space-y-6 fade-in">
+        <div class="flex flex-col items-center gap-2">
+          <div class="relative group cursor-pointer" (click)="fileInput.click()">
+            
+            <div class="w-28 h-28 bg-zinc-800 rounded-full flex items-center justify-center text-5xl border-4 border-zinc-700 overflow-hidden shadow-lg group-hover:border-primary transition">
+              <img *ngIf="user.avatar_url" [src]="user.avatar_url" class="w-full h-full object-cover">
+              <span *ngIf="!user.avatar_url">📷</span>
+            </div>
+
+            <div class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
+              <span class="text-xs font-bold text-white uppercase tracking-widest">Trocar</span>
+            </div>
+            
+            <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
+          </div>
+          <p class="text-xs text-zinc-500">Clica na foto para alterar</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs text-zinc-400 font-bold mb-1 uppercase tracking-wider">Nome Completo</label>
+            <input [(ngModel)]="user.name" class="w-full bg-zinc-900 border border-zinc-600 text-white p-3 rounded focus:border-primary outline-none transition focus:ring-1 focus:ring-primary">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs text-zinc-400 font-bold mb-1 uppercase tracking-wider">Bio / Especialidade</label>
+            <textarea [(ngModel)]="user.bio" rows="2" class="w-full bg-zinc-900 border border-zinc-600 text-white p-3 rounded focus:border-primary outline-none transition focus:ring-1 focus:ring-primary" placeholder="Ex: Mestre em cortes clássicos..."></textarea>
+          </div>
+          <div>
+            <label class="block text-xs text-zinc-500 font-bold mb-1 uppercase">E-mail</label>
+            <input [value]="user.email" disabled class="w-full bg-zinc-800 border border-zinc-700 text-zinc-500 p-3 rounded cursor-not-allowed">
+          </div>
+          <div>
+            <label class="block text-xs text-zinc-500 font-bold mb-1 uppercase">Telefone</label>
+            <input [value]="user.phone || '-'" disabled class="w-full bg-zinc-800 border border-zinc-700 text-zinc-500 p-3 rounded cursor-not-allowed">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'SCHEDULE'" class="fade-in space-y-4">
+        <div class="bg-blue-900/20 border border-blue-900/50 p-3 rounded text-sm text-blue-200 flex gap-2">
+          <span>ℹ️</span>
+          <p>Aqui defines os horários <strong>específicos deste profissional</strong>. Desmarca o dia para dar folga.</p>
+        </div>
+
+        <div class="grid gap-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+          <div *ngFor="let day of workDays" class="flex items-center justify-between bg-zinc-900/50 p-3 rounded border border-zinc-800">
+            
+            <div class="flex items-center gap-3 w-32">
+              <input type="checkbox" [(ngModel)]="day.active" class="accent-primary w-5 h-5 cursor-pointer">
+              <span [class.text-zinc-500]="!day.active" [class.text-white]="day.active" class="font-bold">{{ day.name }}</span>
+            </div>
+
+            <div *ngIf="day.active" class="flex gap-2 items-center animate-fade-in">
+              <input type="time" [(ngModel)]="day.start" class="bg-zinc-800 text-white border border-zinc-600 rounded p-1 text-sm focus:border-primary outline-none w-20 text-center">
+              <span class="text-zinc-500 text-sm">até</span>
+              <input type="time" [(ngModel)]="day.end" class="bg-zinc-800 text-white border border-zinc-600 rounded p-1 text-sm focus:border-primary outline-none w-20 text-center">
+            </div>
+            
+            <span *ngIf="!day.active" class="text-zinc-600 text-sm italic px-2">Folga / Fechado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-8 pt-4 border-t border-zinc-700">
+        <button (click)="cancel()" 
+                class="w-1/3 border border-zinc-600 hover:bg-zinc-800 text-white font-bold py-3 rounded transition text-sm">
+          Cancelar
+        </button>
+        
+        <button (click)="save()" [disabled]="isSaving" class="w-2/3 bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded transition disabled:opacity-50 shadow-lg shadow-green-900/20 text-sm">
+          {{ isSaving ? 'A guardar...' : 'Salvar Alterações' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

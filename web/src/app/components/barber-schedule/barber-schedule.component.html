@@ -1,0 +1,23 @@
+<div class="p-6 bg-card rounded-xl border border-zinc-700">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-2xl font-bold">Minha Agenda</h2>
+    <div class="flex items-center gap-2">
+      <button (click)="filterMode='HOJE'; loadAppointments()" [class.bg-primary]="filterMode==='HOJE'" class="text-xs bg-zinc-800 text-white px-2 py-1 rounded">Hoje</button>
+      <button (click)="filterMode='PROXIMOS'; loadAppointments()" [class.bg-primary]="filterMode==='PROXIMOS'" class="text-xs bg-zinc-800 text-white px-2 py-1 rounded">Próximos</button>
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="text-sm text-zinc-400">Carregando...</div>
+  <div *ngIf="!isLoading && appointments.length === 0" class="text-sm text-zinc-400">Nenhum agendamento para o período selecionado.</div>
+  <div *ngIf="appointments.length > 0" class="divide-y divide-zinc-700">
+    <div *ngFor="let appt of appointments" class="py-3 flex justify-between items-center hover:bg-zinc-800/30 rounded transition px-2">
+      <div>
+        <div class="font-bold text-white">{{ appt.guest_name || appt.cliente_logado || 'Cliente' }}</div>
+        <div class="text-xs text-zinc-400">{{ appt.servico }} • {{ appt.starts_at | date:'dd/MM HH:mm' }}</div>
+      </div>
+      <div class="text-right">
+        <div class="text-sm text-green-400">R$ {{ appt.price }}</div>
+        <div class="text-xs text-zinc-400">{{ appt.status }}</div>
+      </div>
+    </div>
+  </div>
+</div>

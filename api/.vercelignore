@@ -1,0 +1,11 @@
+# Ignore test and helper files so Vercel não cria várias Serverless Functions
+test-*.js
+*.http
+check-availability.js
+inspect-db-appointment.js
+test-check-appointment.js
+
+# preserve the src folder and package.json and index.js entrypoint
+!src/**
+!package.json
+!index.js

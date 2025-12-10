@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 1. FUNDO E FONTE GLOBAL */
+body {
+    background-color: #18181b; /* zinc-950 */
+    color: #f4f4f5;            /* zinc-100 */
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden; /* Evita scroll lateral indesejado */
+}
+
+/* 2. SCROLLBAR PERSONALIZADA (Estilo Dark) */
+/* Funciona em Chrome, Edge, Safari */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #18181b; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3f3f46; /* zinc-700 */
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #f97316; /* Laranja (Primary) ao passar o mouse */
+}
+
+/* 3. REMOVER OUTLINE PADRÃO AZUL E TROCAR POR LARANJA */
+*:focus-visible {
+    outline: 2px solid #f97316; /* Primary */
+    outline-offset: 2px;
+}
+
+/* 4. CLASSE DE VIDRO (GLASSMORPHISM) */
+/* Adicionei esta classe para usarmos nas Navbars se quisermos */
+.glass {
+    background: rgba(24, 24, 27, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 5. ANIMAÇÃO SUAVE DE ENTRADA (Fade In) */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 6. AJUSTE PARA INPUTS DATE (Ícone Branco) */
+/* O ícone de calendário padrão é preto, aqui invertemos para branco */
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}

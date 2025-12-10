@@ -1,0 +1,27 @@
+<div class="min-h-screen bg-background p-4 text-white">
+  <div class="max-w-md mx-auto bg-card p-6 rounded-xl border border-zinc-700 shadow-lg mt-6">
+    <h1 class="text-xl font-bold mb-2">Registrar Corte (Rápido)</h1>
+    <p class="text-sm text-zinc-400 mb-4">Página reduzida para uso no celular</p>
+
+    <label class="block text-xs text-zinc-400 mb-1">Nome</label>
+    <input [(ngModel)]="quickData.customer_name" class="w-full mb-3 p-3 bg-zinc-900 rounded border border-zinc-700">
+
+    <label class="block text-xs text-zinc-400 mb-1">Telefone</label>
+    <input [(ngModel)]="quickData.customer_phone" (input)="quickData.customer_phone = formatPhone(quickData.customer_phone)" class="w-full mb-3 p-3 bg-zinc-900 rounded border border-zinc-700" placeholder="(83) 99999-9999">
+
+    <label class="block text-xs text-zinc-400 mb-1">Serviço</label>
+    <select [(ngModel)]="quickData.service_id" class="w-full mb-3 p-3 bg-zinc-900 rounded border border-zinc-700">
+      <option *ngFor="let s of services" [value]="s.id">{{ s.name }} - R$ {{ s.price }}</option>
+    </select>
+
+    <label class="block text-xs text-zinc-400 mb-1">Barbeiro</label>
+    <select [(ngModel)]="quickData.barber_id" class="w-full mb-3 p-3 bg-zinc-900 rounded border border-zinc-700">
+      <option *ngFor="let b of staff" [value]="b.id">{{ b.name }}</option>
+    </select>
+
+    <div class="flex gap-3">
+      <button (click)="saveQuickRegister()" [disabled]="isRegistering" class="w-full bg-primary p-3 rounded font-bold">{{ isRegistering ? 'Salvando...' : 'Registrar Agora' }}</button>
+      <a routerLink="/admin" class="w-20 inline-block text-center bg-zinc-800 p-3 rounded">Voltar</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="min-h-screen bg-background flex items-center justify-center p-6">
+  <div class="bg-card border border-zinc-700 p-8 rounded-xl shadow-xl w-full max-w-md">
+    
+    <h2 class="text-3xl font-bold text-center text-white mb-6">Criar <span class="text-primary">Conta</span></h2>
+
+    <div *ngIf="errorMessage" class="bg-red-900/30 border border-red-500 text-red-200 p-3 rounded mb-6 text-sm text-center animate-pulse">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs text-zinc-400 uppercase font-bold mb-1">Nome Completo</label>
+        <input [(ngModel)]="user.name" type="text" class="w-full bg-zinc-900 border border-zinc-600 text-white p-3 rounded focus:border-primary outline-none">
+      </div>
+
+      <div>
+        <label class="block text-xs text-zinc-400 uppercase font-bold mb-1">E-mail</label>
+        <input [(ngModel)]="user.email" type="email" class="w-full bg-zinc-900 border border-zinc-600 text-white p-3 rounded focus:border-primary outline-none" placeholder="seu@email.com">
+      </div>
+
+      <div>
+        <label class="block text-xs text-zinc-400 uppercase font-bold mb-1">Telefone / WhatsApp</label>
+        <input type="text" 
+               [ngModel]="user.phone" 
+               (keydown)="blockNonNumbers($event)"
+               (input)="formatPhone($event)"
+               maxlength="15"
+               class="w-full bg-zinc-900 border border-zinc-600 text-white p-3 rounded focus:border-primary outline-none" 
+               placeholder="(00) 00000-0000">
+      </div>
+
+      <div>
+        <label class="block text-xs text-zinc-400 uppercase font-bold mb-1">Senha (Mín. 6)</label>
+        <input [(ngModel)]="user.password" type="password" class="w-full bg-zinc-900 border border-zinc-600 text-white p-3 rounded focus:border-primary outline-none" placeholder="******">
+      </div>
+
+      <div>
+        <label class="block text-xs text-zinc-400 uppercase font-bold mb-1">Repetir Senha</label>
+        <input [(ngModel)]="confirmPassword" type="password" class="w-full bg-zinc-900 border border-zinc-600 text-white p-3 rounded focus:border-primary outline-none" placeholder="******">
+      </div>
+
+      <button (click)="onRegister()" [disabled]="isLoading" class="mt-4 w-full bg-primary text-white font-bold py-3 rounded hover:brightness-110 transition disabled:opacity-50 block">
+        {{ isLoading ? 'Criando...' : 'Cadastrar' }}
+      </button>
+    </div>
+
+    <div class="mt-6 text-center text-sm text-zinc-400">
+      Já tem conta? 
+      <a routerLink="/login" class="text-primary hover:underline cursor-pointer font-bold">Fazer Login</a>
+    </div>
+  </div>
+</div>

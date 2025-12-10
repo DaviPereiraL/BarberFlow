@@ -1,0 +1,21 @@
+<div class="min-h-screen bg-background text-text font-sans">
+  <nav class="flex justify-between items-center p-6 sticky top-0 z-50 glass">
+    <div class="text-2xl font-bold cursor-pointer" routerLink="/">Barber<span class="text-primary">Flow</span></div>
+    <div>
+        <button *ngIf="!api.isLoggedIn()" routerLink="/login" class="text-sm font-bold text-muted hover:text-white transition">
+          Login / Entrar
+        </button>
+
+        <div *ngIf="api.isLoggedIn()" class="flex gap-4 items-center">
+          <button *ngIf="api.isAdmin()" routerLink="/admin" class="text-sm font-bold text-primary hover:underline">
+            Painel
+          </button>
+          <button (click)="logout()" class="text-sm font-bold text-red-400 hover:text-red-300 transition">
+            Sair
+          </button>
+        </div>
+    </div>
+  </nav>
+
+  <router-outlet></router-outlet>
+</div>

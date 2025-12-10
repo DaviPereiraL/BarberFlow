@@ -1,0 +1,8 @@
+/* Small CSS for mobile quick register */
+:host {
+  display: block;
+}
+
+_:-ms-lang(x), :host { }
+
+.bg-card { background-color: #0b0b0b; }
