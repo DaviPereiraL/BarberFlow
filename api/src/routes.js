@@ -1,43 +1,44 @@
-const express = require('express');
+const { Router } = require('express');
 const UserController = require('./controllers/userController');
 const ServiceController = require('./controllers/serviceController');
 const AppointmentController = require('./controllers/appointmentController');
-const NotificationController = require('./controllers/notificationController');
-// IMPORTANTE: Certifica-te que criaste o ficheiro paymentController.js na pasta controllers!
 const PaymentController = require('./controllers/paymentController'); 
+const AuthMiddleware = require('./middlewares/auth'); // Se tiver middleware de auth
 
-const router = express.Router();
+const routes = Router();
 
-router.get('/', (req, res) => res.json({ message: 'API BarberFlow Online!' }));
+// --- ROTA DE TESTE (MUDADA PARA /status) ---
+// Antes estava '/', e isso bloqueava o site. Agora não bloqueia mais.
+routes.get('/status', (req, res) => {
+    return res.json({ message: "API BarberFlow está Online!", timestamp: new Date() });
+});
 
 // --- USUÁRIOS ---
-router.get('/users', UserController.listarTodos);
-router.post('/users', UserController.criarUsuario);
-router.post('/login', UserController.fazerLogin);
-router.put('/users/:id', UserController.editarUsuario);
-router.get('/users/:id/availability', UserController.buscarHorarios);
-router.put('/users/:id/availability', UserController.atualizarHorarios);
-router.get('/users/:id/availability/overrides', UserController.getOverrides);
-router.post('/users/:id/availability/overrides', UserController.createOverride);
-router.delete('/users/:id/availability/overrides/:overrideId', UserController.deleteOverride);
+routes.post('/users', UserController.create);
+routes.post('/login', UserController.login);
+routes.get('/users', UserController.index); // Listar todos (Ideal proteger com Auth)
+routes.get('/users/:id/schedule', UserController.getSchedule); // Pega horários do barbeiro
+routes.put('/users/:id', UserController.update);
+routes.put('/users/:id/schedule', UserController.updateSchedule);
 
 // --- SERVIÇOS ---
-router.get('/services', ServiceController.listar);
-router.post('/services', ServiceController.criar);
-router.put('/services/:id', ServiceController.atualizar);
-router.delete('/services/:id', ServiceController.deletar);
+routes.post('/services', ServiceController.create);
+routes.get('/services', ServiceController.index);
+routes.delete('/services/:id', ServiceController.delete);
 
 // --- AGENDAMENTOS ---
-router.get('/appointments', AppointmentController.listar);
-router.post('/appointments', AppointmentController.criar);
-router.get('/availability', AppointmentController.checkAvailability);
-router.patch('/appointments/:id', AppointmentController.updateStatus);
+routes.post('/appointments', AppointmentController.criar);
+routes.get('/appointments', AppointmentController.listar);
+routes.get('/appointments/availability', AppointmentController.checkAvailability);
+routes.put('/appointments/:id/status', AppointmentController.updateStatus);
 
-// --- NOTIFICAÇÕES ---
-router.get('/notifications', NotificationController.getNotifications);
-router.patch('/notifications/:id/seen', NotificationController.markSeen);
+// --- PAGAMENTOS (PIX) ---
+// Se você criou o PaymentController como te mandei antes
+if (PaymentController) {
+    routes.post('/payments/pix', PaymentController.gerarPix);
+}
 
-// --- PAGAMENTOS (NOVO) ---
-router.post('/payments/pix', PaymentController.gerarPix);
+// --- NOTIFICAÇÕES (Se tiver implementado) ---
+// routes.get('/notifications', ...);
 
-module.exports = router;
+module.exports = routes;
