@@ -6,16 +6,21 @@ require('dotenv').config();
 
 const app = express();
 
+
 app.use(express.json());
 app.use(cors());
+
 
 app.use(routes);
 
 const angularDistPath = path.join(__dirname, '../../web/dist/web/browser');
 
+console.log(`>>> [Server] Servindo arquivos de: ${angularDistPath}`);
+
 app.use(express.static(angularDistPath));
 
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
+    
     if (req.url.startsWith('/users') || 
         req.url.startsWith('/services') || 
         req.url.startsWith('/appointments') || 
@@ -26,6 +31,7 @@ app.get('*', (req, res) => {
 
     res.sendFile(path.join(angularDistPath, 'index.html'));
 });
+
 
 const PORT = process.env.PORT || 3333;
 
